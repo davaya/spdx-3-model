@@ -1,7 +1,7 @@
                              spdxId = 'https://some.namespace#agent1'
                          type.agent = nil
                                name = 'Info@acme.com'
-           creationInfo.specVersion = 'v3.0.0'
+           creationInfo.specVersion = '3.0.0'
              creationInfo.profile.0 = 'core'
                creationInfo.created = '2022-12-01T00:00:00'
            creationInfo.dataLicense = 'CC0-1.0'

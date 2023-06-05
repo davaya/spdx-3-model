@@ -1,7 +1,7 @@
                              spdxId = 'http://spdx.acme.org/3FA9CB25#person2'
                         type.person = nil
                                name = 'Alice Stone'
-           creationInfo.specVersion = 'v3.0.0'
+           creationInfo.specVersion = '3.0.0'
              creationInfo.profile.0 = 'core'
                creationInfo.created = '2022-12-01T00:00:00'
            creationInfo.dataLicense = 'CC0-1.0'

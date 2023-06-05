@@ -20,7 +20,7 @@ NamespaceMap = MapOf(Prefix, IRI){1..*}
 Element = Record
    1 spdxId           Key(IRI)                     // Element unique identifier: local, prefix:local, or absolute-IRI
    2 type             ElementType                  // Element type and type-specific properties
-   3 creationInfo     CreationInformation
+   3 creationInfo     CreationInformation optional // Not really optional ???
    4 name             String optional
    5 summary          String optional
    6 description      String optional
@@ -85,28 +85,34 @@ Bom = Record
    2 rootElement      Link(Element) [0..*]         // <-Collection  This element is a root. Other containers that it contains?
 
 Snippet = Record                                   // Everything optional, must have something
-   1 contentIdentifier URI optional
-   2 snippetPurpose   SoftwarePurpose [0..*]
-   3 byteRange        PositiveIntegerRange optional
-   4 lineRange        PositiveIntegerRange optional
+   1 byteRange        PositiveIntegerRange optional
+   2 lineRange        PositiveIntegerRange optional
+   3 purpose          SoftwarePurpose [0..*]
+   4 contentIdentifier URI
    5 originatedBy     Link(Element) [0..*]         // <-Artifact:  Link(Agent)
+   6 suppliedBy       Link(Element) [0..1]         // <-Artifact:  Link(Agent)
 
-File = Record
-   1 name             String
-   2 contentIdentifier URI
-   3 contentType      MediaType optional
-   4 filePurpose      SoftwarePurpose [0..*]
-   5 originatedBy     Link(Element) [0..*]         // <-Artifact:  Link(Agent)
-
-Package = Record
-   1 packagePurpose   SoftwarePurpose [0..*]
-   2 downloadLocation URL optional
-   3 homePage         URL optional
+File = Record                                      // <-Artifact, Element/name = required
+   1 contentType      MediaType optional
+   2 purpose          SoftwarePurpose [0..*]
+   3 contentIdentifier URL
    4 originatedBy     Link(Element) [0..*]         // <-Artifact:  Link(Agent)
+   5 suppliedBy       Link(Element) [0..1]         // <-Artifact:  Link(Agent)
+
+Package = Record                                   // <-Artifact, Element/name = required
+   1 packageVersion   String optional
+   2 downloadLocation URL optional
+   3 packageUrl       URL optional
+   4 homePage         URL optional
+   5 purpose          SoftwarePurpose [0..*]
+   6 contentIdentifier URI
+   7 originatedBy     Link(Element) [0..*]         // <-Artifact:  Link(Agent)
+   8 suppliedBy       Link(Element) [0..1]         // <-Artifact:  Link(Agent)
 
 Sbom = Record
-   1 element          Link(Element) [1..*]         // <-Collection
-   2 rootElement      Link(Element) [0..*]         // <-Collection
+   1 sbomType         SbomType
+   2 element          Link(Element) [1..*]         // <-Collection
+   3 rootElement      Link(Element) [0..*]         // <-Collection
 
 CreationInformation = Record
    1 specVersion      SemVer
@@ -117,11 +123,14 @@ CreationInformation = Record
    6 createdUsing     Link(Element) [0..*]         // Link(Tool)
    7 comment          String optional
 
-IntegrityMethod = Choice
-   1 hash             Hashes
-   2 signature        PublicKeySignature           // A public key by itself is not an integrity check
+IntegrityMethod = Record
+   1 comment          String optional
+   2 algorithm        HashAlgorithm
+   3 hashValue        Binary{1..*} /x
 
-Hashes = Map{1..*}
+HashAlgorithm = Enumerated(Enum[Hash])
+
+Hash = Map{1..1}
    1 sha1             Binary /x optional
    2 sha224           Binary /x optional
    3 sha256           Binary /x optional
@@ -152,16 +161,18 @@ MediaType = String
 
 Prefix = String{1..16}                             // Abbreviation for document namespace
 
-SemVer = String{pattern="^(\d{1,4})\.(\d{1,6})$"}  // m.n: "3.141592" is valid, "3.14159262" is not.
+SemVer = String{pattern="^(\d{1,4})(\.(\d{1,6})){0,2}$"}  // k.m.n: "3.141592" is valid, "3.14159262" is not.
 
 SnippetLocation = Record
 
 IRI = String /iri
 
+URI = String /uri
+
 URL = String /uri                                  // IRI, must be a locator
 
 ExternalIdentifier = Record
-   1 type             ExternalIdentifierType
+   1 externalIdentifierType ExternalIdentifierType
    2 identifier       String
    3 comment          String optional
 
@@ -171,7 +182,7 @@ ExternalMap = Record
    3 locationHint     URL optional
 
 ExternalReference = Record
-   1 type             ExternalReferenceType
+   1 externalReferenceType ExternalReferenceType
    2 locator          IRI                          // URL - must be a locator
    3 contentType      MediaType optional
    4 comment          String optional
@@ -261,6 +272,9 @@ RelationshipType = Enumerated
   20 ancestor                                      // Provenance: artifact->artifact
   21 suppliedBy                                    // Provenance: artifact->artifact
   22 variant                                       // Provenance: artifact->artifact
+
+SbomType = Enumerated
+   1 TBD
 
 SoftwarePurpose = Enumerated
    0 other

@@ -5,7 +5,7 @@
   },
   "name": "spdx.dev",
   "creationInfo": {
-    "specVersion": "v3.0.0",
+    "specVersion": "3.0.0",
     "profile": ["core"],
     "created": "2022-12-01T00:00:00",
     "dataLicense": "CC0-1.0",

@@ -3,39 +3,39 @@ import json
 import os
 
 
-def flatten(src: dict, path: str = '', fdict: dict = None, sep: str = '.') -> dict:
+def flatten(nested: dict, path: str = '', fdict: dict = None, sep: str = '.') -> dict:
     """
     Convert a nested dict to a flat dict with hierarchical keys
     """
     if fdict is None:
         fdict = {}
-    out = fdict.copy()
-    if isinstance(src, (dict, list)) and len(src) == 0:
-        out[path] = None
-    elif isinstance(src, dict):
-        for k, v in src.items():
+    flat = fdict.copy()
+    if isinstance(nested, (dict, list)) and len(nested) == 0:
+        flat[path] = None
+    elif isinstance(nested, dict):
+        for k, v in nested.items():
             k = k.split(':')[1] if ':' in k else k
-            out = flatten(v, sep.join((path, k)) if path else k, out)
-    elif isinstance(src, list):
-        for n, v in enumerate(src):
-            out.update(flatten(v, sep.join([path, str(n)])))
+            flat = flatten(v, sep.join((path, k)) if path else k, flat)
+    elif isinstance(nested, list):
+        for n, v in enumerate(nested):
+            flat.update(flatten(v, sep.join([path, str(n)])))
     else:
-        out[path] = src
-    return out
+        flat[path] = nested
+    return flat
 
 
-def unflatten(source: dict, sep: str = '.') -> dict:
-    out = {}
-    for k, v in source.items():
-        current = out
+def unflatten(flat: dict, sep: str = '.') -> dict:
+    nested = {}
+    for k, v in flat.items():
+        current = nested
         path = k.split(sep)
 
-        for piece in path[:-1]:
-            if not piece in current:
-                current[piece] = {}
-            current = current[piece]
+        for key in path[:-1]:
+            if key not in current:
+                current[key] = {}
+            current = current[key]
         current[path[-1]] = v if v is not None else {}
-    return out
+    return nested
 
 
 def dlist(src: dict) -> dict:
@@ -63,6 +63,7 @@ for e in os.scandir(os.path.join('..', 'json', 'examples')):
     if e.is_file() and fext == '.json':
         with open(e.path) as fp:
             element = json.load(fp)
+        e = codec.decode('Element', element)
         element_f = flatten(element)
         element_u = dlist(unflatten(element_f))
         assert element_u == element

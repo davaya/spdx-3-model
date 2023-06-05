@@ -6,7 +6,7 @@
         type.spdxDocument.element.4 = 'https://some.namespace#sbomolator_v2'
         type.spdxDocument.element.5 = 'http://spdx.acme.org/3FA9CB25#spdxdocument240'
                                name = 'Doc 240 - two Person elements'
-           creationInfo.specVersion = 'v3.0.0'
+           creationInfo.specVersion = '3.0.0'
              creationInfo.profile.0 = 'core'
                creationInfo.created = '2022-12-01T00:00:00'
            creationInfo.dataLicense = 'CC0-1.0'

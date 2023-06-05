@@ -3,14 +3,14 @@
   "type": {
     "file": {
       "contentType": "text/html",
-      "purpose": "documentation",
+      "purpose": ["documentation"],
       "contentIdentifier": "https://spdx.github.io/spdx-spec/v2.3/",
-      "originatedBy": "https://spdx.dev/elements/3F26391C#spdx-dev"
+      "originatedBy": ["https://spdx.dev/elements/3F26391C#spdx-dev"]
     }
   },
   "name": "The Software Package Data Exchange® (SPDX®) Specification Version 2.3",
   "creationInfo": {
-    "specVersion": "v3.0.0",
+    "specVersion": "3.0.0",
     "profile": ["core", "software"],
     "created": "2022-12-01T00:00:00",
     "dataLicense": "CC0-1.0",
