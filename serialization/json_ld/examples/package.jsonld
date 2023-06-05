@@ -26,7 +26,7 @@
           "algorithm": "sha1",
           "hashValue": "71c4025dd9897b364f3ebbb42c484ff43d00791c"
         },
-                {
+        {
           "@type": "Hash",
           "algorithm": "sha256",
           "hashValue": "fbea580d286bbbbb41314430d58ba887716a74d7134119c5307cdc9f0c7a4299"
