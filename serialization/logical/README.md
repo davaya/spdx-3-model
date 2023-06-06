@@ -31,7 +31,6 @@ An example logical value of an Annotation element would be a flat set of key-val
           type.annotation.statement = 'Keanu Reeves is back as cyberpunk icon Neo but fans of the original will find this cynical reboot a bitter pill to swallow.'
            creationInfo.specVersion = 'v3.0'
              creationInfo.profile.0 = 'core'
-             creationInfo.profile.1 = 'software'
                creationInfo.created = '2023-06-02T13:49:24+00:00'
            creationInfo.dataLicense = 'CC0-1.0'
              creationInfo.createdBy = 'http://spdx.acme.org/3FA9CB25#person1'
@@ -54,11 +53,11 @@ one or more logical Element values
 * **SpdxDocument** - an SPDX Element containing metadata about a Payload
 * **ElementSet** - an arbitrary set of Element logical values.
 
-An ElementSet could be a directory containing one or more logical value files, and
-a serializer would need to read those files and construct
-a Payload and optionally an SpdxDocument element describing that Payload.
-A deserializer application would need to read the payload and reconstruct the
-identical directory of logical value files.
+An ElementSet could be a directory containing one or more logical value files,
+and a serializer test reads those files and constructs a Payload and optionally
+an SpdxDocument element describing that Payload.
+A deserializer test reads the Payload and reconstructs the identical directory
+of logical value files.
 
 ### SpdxDocument vs. Bundle
 

@@ -1,6 +1,6 @@
 # JSON Serialization
 
-As described in [Logical Values](logical.md), JSON is a general purpose data format
+As described in [Logical Values](logical/README.md), JSON is a general purpose data format
 that does not depend upon data objects being graph nodes, define RDF-based reserved
 property names (@id, @type, @graph, etc.), or require applications to perform
 RDF-specific processing of JSON data.
