@@ -15,6 +15,7 @@ DATA_REPO = 'https://api.github.com/repos/oasis-open/openc2-jadn-software/conten
 DATA = DATA_DIR
 
 AUTH = {'Authorization': f'token {os.environ["GitHubToken"] if DATA == DATA_REPO else "None"}'}
+VALIDATE_JADN = True
 
 
 class WebDirEntry:
@@ -59,65 +60,40 @@ def open_file(fileentry: os.DirEntry) -> TextIO:
     return open(fileentry.path, 'r', encoding='utf8')
 
 
-def validate(dpath):  # Check correct validation of good and bad commands and responses
+def validate(dpath, codec, json_schema):  # Validate serialized Element examples
     print(f'\n{dpath}:')
     dl = list_dir(dpath)
+    print(dl)
+
     try:
         if VALIDATE_JADN:
-            schemas = [f for f in dl['files'] if os.path.splitext(f.name)[1] in ('.jadn', '.jidl')]
-            with open_file(schemas[0]) as fp:
+            codec.decode('Element', json.load(open_file(dpath)))
+        else:
+            validate(json.load(open_file(dpath)), json_schema,
+                     format_checker=Draft202012Validator.FORMAT_CHECKER)
+    except ValidationError as e:    # JSON Schema validation error
+        print(f' Fail: {e.message}')
+    except ValueError as e:         # JADN validation error
+        print(f' Fail: {e}')
+    except json.decoder.JSONDecodeError as e:
+        print(f' Bad JSON: {e.msg} "{e.doc}"')
+
+
+def main(data: str = DATA) -> None:
+    print(f'Installed JADN version: {jadn.__version__}\n')
+    codec = json_schema = None
+    try:
+        if VALIDATE_JADN:
+            with open_file('spdx-v3.jidl') as fp:
                 codec = jadn.codec.Codec(jadn.load_any(fp), verbose_rec=True, verbose_str=True)
         else:
-            schemas = [f for f in dl['files'] if os.path.splitext(f.name)[1] == '.json']
-            with open_file(schemas[0]) as fp:
+            with open_file('spdx-v3.json') as fp:
                 json_schema = json.load(fp)
-    except IndexError:
-        print(f'No schemas found in {dpath}')
-        return
     except ValueError as e:
         print(e)
-        return
-    tcount = defaultdict(int)       # Total instances tested
-    ecount = defaultdict(int)       # Error instances
-    tdirs = {d.name: d for d in dl['dirs']}
-    for cr in ('command', 'response'):
-        for gb in ('Good', 'Bad'):
-            pdir = f'{gb}-{cr}'
-            if pdir in tdirs:
-                print(f'  {pdir}')
-                dl2 = list_dir(tdirs[pdir].path)
-                for n, f in enumerate(dl2['files'], start=1):
-                    print(f'{n:>6} {f.name:<50}', end='')
-                    try:
-                        if VALIDATE_JADN:
-                            crtype = 'OpenC2-Command' if cr == 'command' else 'OpenC2-Response'
-                            codec.decode(crtype, json.load(open_file(f)))
-                        else:
-                            validate({'openc2_' + cr: json.load(open_file(f))}, json_schema,
-                                     format_checker=Draft202012Validator.FORMAT_CHECKER)
-                        tcount[pdir] += 1
-                        ecount[pdir] += 1 if gb == 'Bad' else 0
-                        print()
-                    except ValidationError as e:    # JSON Schema validation error
-                        tcount[pdir] += 1
-                        ecount[pdir] += 1 if gb == 'Good' else 0
-                        print(f' Fail: {e.message}')
-                    except ValueError as e:         # JADN validation error
-                        tcount[pdir] += 1
-                        ecount[pdir] += 1 if gb == 'Good' else 0
-                        print(f' Fail: {e}')
-                    except json.decoder.JSONDecodeError as e:
-                        print(f' Bad JSON: {e.msg} "{e.doc}"')
-            else:
-                print(pdir, 'No tests')
-    print(f'Validation Errors: {sum(k for k in ecount.values())}', {k: str(dict(ecount)[k]) + '/' + str(dict(tcount)[k]) for k in tcount})
 
-
-
-def main(data_dir: str = DATA_DIR) -> None:
-    print(f'Installed JADN version: {jadn.__version__}\n')
-    for f in os.listdir(data_dir):
-        validate(f, schema_dir, output_dir)
+    for f in list_dir(data):
+        validate(f, codec=codec, json_schema=json_schema)
 
 
 if __name__ == '__main__':

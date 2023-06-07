@@ -3,10 +3,10 @@
      version: "spdx-3-model 2023-05-22"
  description: "This information model defines the serialized structure of SPDXv3 logical model types"
      license: "CC0-1.0"
-     exports: ["Elements"]
+     exports: ["ElementSet"]
       config: {"$FieldName": "^[a-zA-Z@][_A-Za-z0-9]{0,63}$"}
 
-Elements = ArrayOf(Element) unique                 // Serialized set of Element values
+ElementSet = ArrayOf(Element) unique               // Set of serialized Element values
 
 Payload = Record                                   // Serialized file (or equivalent) for transferring Elements
    1 namespace        IRI                          // Default namespace for Element ids in this file (rdf BASE)
@@ -38,7 +38,7 @@ ElementType = Choice
    5 tool             Tool                         // <- Element
    6 annotation       Annotation                   // <- Element
    7 relationship     Relationship                 // <- Element
-   8 lcRelationship   LifecycleScopeRelationship   // <- Relationship
+   8 lcRelationship   LifecycleScopedRelationship  // <- Relationship
    9 asRelationship   AssessmentRelationship       // <- Relationship
   10 spdxDocument     SpdxDocument                 // <- Collection: A file containing serialized element values
   11 bom              Bom                          // <- Collection
@@ -46,7 +46,7 @@ ElementType = Choice
   13 file             File                         // <- Artifact: pkg:Software
   14 snippet          Snippet                      // <- Artifact: pkg:Software
   15 sbom             Sbom                         // <- BOM: pkg:Software
-  16 swdRelationship  SoftwareDependencyRelationship // <- Relationship: pkg:Software
+  16 swdRelationship  SoftwareDependencyRelationship // <- LifecycleScopedRelationship: pkg:Software
 
 Agent = Record                                     // <-Element
 
@@ -65,12 +65,41 @@ Annotation = Record                                // <-Element
    4 contentType      MediaType optional
 
 Relationship = Record                              // <-Element
-   1 relationshipType RelationshipType             // just 'type'
+   1 relationshipType RelationshipType
    2 from             Link(Element)
    3 to               Link(Element) [1..*]
    4 completeness     RelationshipCompleteness optional
    5 startTime        DateTime optional
    6 endTime          DateTime optional
+
+LifecycleScopedRelationship = Record               // <-Relationship
+   1 scope            LifecycleScopeType
+   2 relationshipType RelationshipType
+   3 from             Link(Element)
+   4 to               Link(Element) [1..*]
+   5 completeness     RelationshipCompleteness optional
+   6 startTime        DateTime optional
+   7 endTime          DateTime optional
+
+AssessmentRelationship = Record                    // <-Relationship
+   1 assessmentType   AssessmentType
+   2 relationshipType RelationshipType
+   3 from             Link(Element)
+   4 to               Link(Element) [1..*]
+   5 completeness     RelationshipCompleteness optional
+   6 startTime        DateTime optional
+   7 endTime          DateTime optional
+
+SoftwareDependencyRelationship = Record            // <-LifecycleScopedRelationship
+   1 linkType         DependencyLinkType
+   2 requirement      DependencyRequirement
+   3 scope            LifecycleScopeType
+   4 relationshipType RelationshipType
+   5 from             Link(Element)
+   6 to               Link(Element) [1..*]
+   7 completeness     RelationshipCompleteness optional
+   8 startTime        DateTime optional
+   9 endTime          DateTime optional
 
 SpdxDocument = Record                              // <-Element (context -> summary?)
    1 namespace        IRI optional                 // Default namespace for Element ids in the SPDX file (rdf BASE)
@@ -151,19 +180,21 @@ Hash = Map{1..1}
   24 blake2b_512      Binary /x optional
   25 blake3           Binary /x optional
 
-PublicKeySignature = Record
-
 Extensions = MapOf(IRI, String)                    // Extensions are opaque strings
 
 DateTime = String                                  // implement Integer /datetime_ms
 
 MediaType = String
 
+PositiveInteger = Integer{0..*}
+
+PositiveIntegerRange = Record
+   1 start           PositiveInteger
+   2 end             PositiveInteger
+
 Prefix = String{1..16}                             // Abbreviation for document namespace
 
 SemVer = String{pattern="^(\d{1,4})(\.(\d{1,6})){0,2}$"}  // k.m.n: "3.141592" is valid, "3.14159262" is not.
-
-SnippetLocation = Record
 
 IRI = String /iri
 
@@ -187,14 +218,18 @@ ExternalReference = Record
    3 contentType      MediaType optional
    4 comment          String optional
 
-SoftwareDependencyRelationship = Record
-   1 linkType         DependencyLinkType
-   2 scope            DependencyScope
-   3 requirement      DependencyRequirement
-
 AnnotationType = Enumerated
    0 other
    1 review
+
+AssessmentType = Enumerated
+   0 other
+   1 cvss2
+   2 cvss3
+   3 epss
+   4 exploitCatalog
+   5 vex
+   6 ssvc
 
 DependencyLinkType = Enumerated
    0 other
@@ -209,13 +244,6 @@ DependencyRequirement = Enumerated
    3 required
    4 provided
    5 preRequisite
-
-DependencyScope = Enumerated
-   0 other
-   1 noAssertion                                   // default
-   2 build
-   3 dev
-   4 test
 
 ExternalIdentifierType = Enumerated
    0 other
@@ -238,6 +266,9 @@ ExternalReferenceType = Enumerated
 
 LicenseId = Enumerated
    0 CC0-1.0                                       // Fixed value unless others are added
+
+LifecycleScopeType = Enumerated
+   1 TBD
 
 ProfileIdentifier = Enumerated
    1 core

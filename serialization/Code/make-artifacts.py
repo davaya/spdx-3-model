@@ -6,7 +6,7 @@ import jadn
 import os
 import shutil
 
-SCHEMA_DIR = os.path.join('..', 'json', 'examples')
+SCHEMA_DIR = '.'
 OUTPUT_DIR = 'Out'
 
 
@@ -36,8 +36,7 @@ def main(schema_dir: str = SCHEMA_DIR, output_dir: str = OUTPUT_DIR) -> None:
     css_dir = os.path.join(output_dir, 'css')
     os.makedirs(css_dir, exist_ok=True)
     shutil.copy(os.path.join(jadn.data_dir(), 'dtheme.css'), css_dir)
-    for f in os.listdir(schema_dir):
-        translate(f, schema_dir, output_dir)
+    translate('spdx-v3.jidl', schema_dir, output_dir)
 
 
 if __name__ == '__main__':
