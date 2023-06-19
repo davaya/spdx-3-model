@@ -83,16 +83,23 @@ if __name__ == '__main__':
             assert d2.name in {'Classes', 'Individuals', 'Properties', 'Vocabularies'}
             if d2.name in {'Classes', 'Vocabularies'}:
                 for f3 in e3['files']:
-                    f = load_model_file(f3)
-                    print(f". . {f['name']}")
-                    if f['name'] in modelRefs:
-                        print(f"###### Duplicate: {f['name']}")
-                    modelRefs[f['name']] = '/'.join((prefix, f['name']))
-                    for k, v in f.items():
-                        print(f'. . . {k}: {v}')
+                    if not f3.name.startswith('_'):
+                        f = load_model_file(f3)
+                        print(f". . {f['name']}")
+                        if f['name'] in modelRefs:
+                            print(f"###### Duplicate: {f['name']}")
+                        modelRefs[f['name']] = '/'.join((prefix, f['name']))
+                        for k, v in f.items():
+                            print(f'. . . {k}: {v}')
+                    else:
+                        print('### Ignored:', f3.name)
 
     print('\nModel References:')
     for k, v in modelRefs.items():
         print(f'{k:>40}: {v}')
-    with open('modelRefs.json', 'w') as fp:
+    with open('modelRef.json', 'w') as fp:
         json.dump(modelRefs, fp, indent=2)
+    with open('modelRefContext.json') as fp:
+        modelRefContext = json.load(fp)
+    print(set(modelRefs) - set(modelRefContext))
+    print(set(modelRefContext) - set(modelRefs))
