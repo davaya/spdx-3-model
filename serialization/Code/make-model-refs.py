@@ -7,8 +7,7 @@ from urllib.request import urlopen, Request
 from urllib.parse import urlparse
 
 SPDX_MODEL = 'https://api.github.com/repos/spdx/spdx-3-model/contents/model'
-
-AUTH = {'Authorization': f'token {os.environ["GitHubToken"]}'}
+SPDX_MODEL = os.path.join('..', '..', 'model')
 VALIDATE_JADN = True
 
 
@@ -68,6 +67,9 @@ def load_model_file(file):
 
 
 if __name__ == '__main__':
+    AUTH = {'Authorization': f'token {os.environ["GitHubToken"]}'}
+    print(f'GitHub Token: ..{AUTH["Authorization"][-4:]}')
+
     modelRefs = {}
     e1 = list_dir(SPDX_MODEL)
     assert len(e1['files']) == 0
