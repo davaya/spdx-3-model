@@ -21,7 +21,9 @@ but this document does not constrain or assume that implementations of the class
 1. Every class is based on one of a set of pre-defined root ("base") classes.
 2. There are two kinds of [base class](https://www.w3.org/TR/xmlschema11-1/#Type_Definition_Summary)
 (XSD): simple ("primitive") and complex ("compound"). Simple class instances are atomic values that
-cannot be decomposed, complex class instances are containers with container type and content.
+cannot be decomposed, complex class instances are containers
+([RDF Section 2.15](https://www.w3.org/TR/REC-rdf-syntax/#section-Syntax-list-elements))
+with container type and content.
 3. There are two kinds of complex class: datatype and classtype.
     * [Datatype](#uml) (UML Section 10.2) instances are distinguished only by their value.
     * Classtype* instances are distinguished by a subset of their value, called a key or id.
@@ -48,15 +50,18 @@ All complex classes have four [multiplicity attributes](#uml) (UML Section 7.5):
 |   Sequence |  false   |   true    |
 |        Bag |  false   |   false   |
 
-Complex classes that enumerate fields by identifier and class/type are always unique (Set or OrderedSet) -
-there must not be duplicate field identifiers within a class. There can be duplicate member instances,
-for example a class with "start" and "end" fields, each with the same value class/type.)
+Complex classes that enumerate fields by identifier and class must have field identifiers that are
+unique within the class (Set or OrderedSet). A complex class may have duplicate field value classes.
 
-In complex classes with no field identifiers, all members have the same value class/type and the container
+In complex classes with no field identifiers, all members have the same value class and the container
 may be any of the four container types.
 
 
 ## References
+###### [RDF]
+
+*RDF/XML Syntax*, W3C Recommendation, 25 February 2014, https://www.w3.org/TR/rdf-syntax-grammar/
+
 ###### [UML]
 
 *Unified Modeling Language*, Object Management Group, Version 2.5.1, December 2017,
