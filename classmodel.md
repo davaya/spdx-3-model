@@ -29,7 +29,7 @@ cannot be decomposed, complex class instances are containers with container type
 Simple classes are by definition datatypes because there is no subset of a simple instance's
 value.  So each class is one of: simple datatype, complex datatype, or complex classtype.
 
-*"Classtype" is used in this document as the name for "every class that is not a datatype".*
+ *\* Classtype is used in this document as the name for "every class that is not a datatype".*
 
 ## Simple Classes
 
