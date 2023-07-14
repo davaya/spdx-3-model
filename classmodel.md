@@ -35,20 +35,25 @@ value.  So each class is one of: simple datatype, complex datatype, or complex c
 
 ## Complex Classes
 
-All compound classes have four multiplicity attributes as described by [multiplicity properties](#uml) (UML Section 7.5)
+All complex classes have four [multiplicity attributes](#uml) (UML Section 7.5):
 * minCount
 * maxCount
 * isUnique
 * isOrdered
 
-| Multiplicity Type | isUnique | isOrdered |
-|------------------:|:--------:|:---------:|
-|               Set |   true   |   false   |
-|        OrderedSet |   true   |   true    |
-|          Sequence |  false   |   true    |
-|               Bag |  false   |   false   |
+|  Container | isUnique | isOrdered |
+|-----------:|:--------:|:---------:|
+|        Set |   true   |   false   |
+| OrderedSet |   true   |   true    |
+|   Sequence |  false   |   true    |
+|        Bag |  false   |   false   |
 
-Complex classes that enumerate properties by name and type always have the OrderedSet type.
+Complex classes that enumerate fields by identifier and class/type are always unique (Set or OrderedSet) -
+there must not be duplicate field identifiers within a class. There can be duplicate member instances,
+for example a class with "start" and "end" fields, each with the same value class/type.)
+
+In complex classes with no field identifiers, all members have the same value class/type and the container
+may be any of the four container types.
 
 
 ## References
