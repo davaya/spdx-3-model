@@ -3,8 +3,8 @@ This document describes the Class method of defining logical data models in a ma
 defining logical values (the information needed to accomplish a task) and representing logical values
 as serialized physical data.
 
-The first obstacle to describing the method is terminology; several terms used are heavily overloaded
-and subject to differing opinions as to meaning. Within this document they mean:
+The first obstacle to describing the method is terminology; several terms used are overloaded
+or subject to differing opinions as to meaning. Within this document they mean:
 
 ## Terminology
 
@@ -12,8 +12,11 @@ and subject to differing opinions as to meaning. Within this document they mean:
 * **Classifier** - a classification of instances according to their features --- [UML](#uml) Section 9.  
 * **Instance** - a logical or physical data item identified by a classifier as being a member of a class.
 * **Type** - an exact synonym for class; type and class are interchangeable.
-* **Logical Value** - instances with meaning defined by the model
-* **Physical Value** - a sequence of bytes that represents a logical value using a specific data format
+* **Logical Value** - instances with meaning defined by the model, the XSD
+[Value Space](https://www.w3.org/TR/xmlschema11-2/#value-space).
+* **Physical Value** - a sequence of bytes that represents a logical value using a specific data format,
+the format-agnostic analog of the XSD
+[Lexical Space](https://www.w3.org/TR/xmlschema11-2/#lexical-space).
 
 In object-oriented programming a class can have public variables, private variables, and methods.
 A class model MAY be implemented using OOP classes where logical values are the public variables of a class,
