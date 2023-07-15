@@ -11,16 +11,16 @@ or subject to differing opinions as to meaning. Within this document they mean:
 * **Class** - the name of a set of features used to distinguish some instances from others.
 * **Classifier** - a classification of instances according to their features --- [UML](#uml) Section 9.  
 * **Instance** - a logical or physical data item identified by a classifier as being a member of a class.
-* **Type** - an exact synonym for class; type and class are interchangeable.
-* **Logical Value** - instances with meaning defined by the model, the XSD
+* **Type** - an exact synonym for class; type and class are used interchangeably.
+* **Logical Value** - instances with meaning defined by the model, in the XSD
 [Value Space](https://www.w3.org/TR/xmlschema11-2/#value-space).
 * **Physical Value** - a sequence of bytes that represents a logical value using a specific data format,
-the format-agnostic analog of the XSD
+the format-agnostic analog of in the XSD
 [Lexical Space](https://www.w3.org/TR/xmlschema11-2/#lexical-space).
 
 In object-oriented programming a class can have public variables, private variables, and methods.
 A class model MAY be implemented using OOP classes where logical values are the public variables of a class,
-but this document does not constrain or assume that implementations of the class model are OOP-based.
+but the class model does not constrain or assume that implementations are OOP-based.
 
 ## Principles
 1. Every class is based on one of a set of pre-defined root ("base") classes.
@@ -36,9 +36,9 @@ with container type and content.
 Simple classes are by definition datatypes because there is no subset of a simple instance's
 value.  So every class is one of: simple datatype, complex datatype, or complex classtype.
 
- *\* Classtype is used in this document as the name for "every complex class that is not a datatype".
+ *\* Classtype is used in this document as the name for "complex class that is not a datatype".
 Differing opinions on the meaning of "class" often restrict it to only complex classes, or to only
-complex classes that are not datatypes. This document uses Class as defined in
+complex classes that are not datatypes. The class model uses Class as defined in
 [RDFS](https://www.w3.org/TR/rdf11-schema/#ch_classes) Section 2:
  "The class of everything. rdfs:Resource is an instance of rdfs:Class"*
 
